@@ -7,6 +7,12 @@ First we find out what your wireless card is named with the commmand
 then run this command to turn on monitor mode if your wirless card has that capability
 > airmon-ng start wlp1s0 (in sudo)
 
+OR 
+
+> ifconfig wlo1 down
+> iwconfig wlo1 mode monitor
+> ifconfig wlo1 up
+
 then run this command to check if its in monitor mode:
 > iwconfig
 
@@ -59,6 +65,14 @@ After finishing your work, use this command to restart your wirless network card
 
 > airmon-ng stop wlp1s0
 > systemctl restart net*
+
+
+Or 
+> ifconfig wlo1 down
+> iwconfig wlo1 mode managed
+> ifconfig wlo1 up
+
+> sudo systemctl restart networking
 
 Enjoy 
 
