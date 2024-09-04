@@ -1,3 +1,9 @@
+Install the necessary Drivers :
+> sudo apt install -y realtek-rtl8188eus-dkms
+
+
+
+
 First you would need the "aircrack-ng" package.
 
 
